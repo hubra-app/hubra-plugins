@@ -1,0 +1,108 @@
+name: Publish the Marketplace
+
+# Reads every plugin repository in plugins.yaml, checks each release's signature
+# and checksum, writes index.json signed with the HUBRA_SIGNING_KEY secret (the
+# Hubra project key) and publishes it with GitHub Pages:
+#   https://plugins.hubra.club/index.json
+# Then downloads that index and every archive it offers and checks them the way
+# a Hubra does (flask plugins check).
+# Runs on changes here, every hour (new releases and new plugin repositories),
+# by hand, and when a plugin repository sends a "plugin-released" dispatch.
+#
+# Secrets (organisation or repository):
+#   HUBRA_SIGNING_KEY   the private key (PEM) of Hubra.pub
+#   HUBRA_READ_TOKEN    only while hubra-app/hubra is private: a token that can read it
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [plugin-released]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  INDEX_URL: https://plugins.hubra.club/index.json
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: hubra-app/hubra
+          path: hubra
+          token: ${{ secrets.HUBRA_READ_TOKEN || github.token }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: hubra/app/backend/requirements.lock
+      - run: pip install --no-deps -r hubra/app/backend/requirements.lock
+      - name: Build the signed index
+        working-directory: hubra/app/backend
+        env:
+          FLASK_APP: "hubra:create_app()"
+          SIGNING_KEY: ${{ secrets.HUBRA_SIGNING_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$SIGNING_KEY" ]; then echo "::error::add the HUBRA_SIGNING_KEY secret"; exit 1; fi
+          key="$RUNNER_TEMP/key.pem"
+          (umask 077 && printf '%s\n' "$SIGNING_KEY" > "$key")
+          # Refuse to sign with any key but the official one.
+          python - "$key" <<'PY'
+          import sys
+          from cryptography.hazmat.primitives import serialization
+          from hubra.core.plugins.trust import OFFICIAL_DIR, key_id, load_public
+          pub = serialization.load_pem_private_key(open(sys.argv[1], "rb").read(), None).public_key()
+          official = load_public((OFFICIAL_DIR / "Hubra.pub").read_text())
+          if key_id(pub) != key_id(official):
+              sys.exit(f"HUBRA_SIGNING_KEY is {key_id(pub)}, not the official key {key_id(official)}")
+          PY
+          flask plugins build-index "$GITHUB_WORKSPACE/plugins.yaml" "$GITHUB_WORKSPACE/site" --key "$key"
+          rm -f "$key"
+          cp "$GITHUB_WORKSPACE/README.md" "$GITHUB_WORKSPACE/site/"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  check:
+    needs: deploy
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: hubra-app/hubra
+          token: ${{ secrets.HUBRA_READ_TOKEN || github.token }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: app/backend/requirements.lock
+      - run: pip install --no-deps -r app/backend/requirements.lock
+      - name: Download and verify what plugins.hubra.club serves
+        working-directory: app/backend
+        env:
+          FLASK_APP: "hubra:create_app()"
+        # A fresh query string, so the Pages CDN can't answer with an older index.
+        run: flask plugins check "$INDEX_URL?run=$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"

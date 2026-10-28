@@ -1,0 +1,11 @@
+# The official Hubra Marketplace: every plugin lives in its own repository and
+# its signed GitHub releases are the versions.
+name: Hubra official
+description: Plugins made by the Hubra project, signed with the Hubra project key
+# Every public repository named hubra-plugin-* of hubra-app is included by
+# itself, so a new plugin repository shows up on the next run.
+discover:
+  - {owner: hubra-app, prefix: hubra-plugin-}
+# List a repository only to withdraw a version:
+#   - {repo: hubra-app/hubra-plugin-x, withdrawn: {"1.2.0": "why"}}
+plugins: []
