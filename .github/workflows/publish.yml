@@ -18,8 +18,9 @@ name: Publish the Marketplace
 #   check    no signing key: verifies what plugins.hubra.club serves
 #
 # Secrets:
-#   HUBRA_SIGNING_KEY   in the environment "plugin-signing" (an organisation
-#                       secret limited to it works too): the private key (PEM)
+#   HUBRA_SIGNING_KEY   an environment secret of "plugin-signing" in this
+#                       repository (not an organisation or repository secret,
+#                       which every job could read): the private key (PEM)
 #                       of Hubra.pub. Limit the environment to the branch main
 #                       (deployment branches), but give it no required
 #                       reviewer here: it runs every hour.
