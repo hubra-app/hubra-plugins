@@ -1,5 +1,7 @@
 # Hubra plugins
 
+[![Publish the Marketplace](https://github.com/hubra-app/hubra-plugins/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/hubra-app/hubra-plugins/actions/workflows/publish.yml?query=branch%3Amain)
+
 The official Marketplace of [Hubra](https://hubra.club): a signed `index.json`
 at **https://plugins.hubra.club/index.json**, which every Hubra trusts out of
 the box (signed with the Hubra project key, `Hubra.pub`).
