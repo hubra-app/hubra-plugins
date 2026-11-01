@@ -1,29 +1,35 @@
 name: Publish the Marketplace
 
 # Reads every plugin repository in plugins.yaml, checks each release's signature
-# and checksum, writes index.json signed with the HUBRA_SIGNING_KEY secret (the
-# Hubra project key) and publishes it with GitHub Pages:
+# and checksum, writes index.json signed with the index key and publishes it
+# with GitHub Pages:
 #   https://plugins.hubra.club/index.json
 # Then downloads that index and every archive it offers and checks them the way
 # a Hubra does (flask plugins check).
 # Runs on changes here, every hour (new releases and new plugin repositories),
 # by hand, and when a plugin repository sends a "plugin-released" dispatch.
 #
-# The signing key is the most sensitive secret here: anything it signs
-# installs as "official" on every Hubra server. So only the index job sees
-# it, in the GitHub environment "plugin-signing", and that job runs no npm and
-# no third-party action, only Hubra's backend and its locked Python packages.
+# Keys have a purpose. The plugins are signed with the plugin key in their own
+# repositories; this repository signs only the index, with the index key
+# (Hubra's keys/official/index/), and lists the plugin key in it. So the job
+# that runs every hour holds no key whose signature runs code. Only the index
+# job sees the key, in the GitHub environment "plugin-signing", and that job
+# runs no npm and no third-party action, only Hubra's backend and its locked
+# Python packages.
+#
+# Until Hubra ships an index key, the plugin key signs the index too (the old
+# format, HUBRA_SIGNING_KEY); the job switches by itself once it does.
 #   index    environment "plugin-signing": builds and signs index.json
 #   deploy   pages: write, no signing key: publishes it
 #   check    no signing key: verifies what plugins.hubra.club serves
 #
-# Secrets:
-#   HUBRA_SIGNING_KEY   an environment secret of "plugin-signing" in this
-#                       repository (not an organisation or repository secret,
-#                       which every job could read): the private key (PEM)
-#                       of Hubra.pub. Limit the environment to the branch main
-#                       (deployment branches), but give it no required
-#                       reviewer here: it runs every hour.
+# Secrets (environment secrets of "plugin-signing" in this repository, not
+# organisation or repository secrets, which every job could read; limit the
+# environment to the branch main, with no required reviewer: it runs every hour):
+#   HUBRA_INDEX_KEY     the private key (PEM) of keys/official/index/*.pub
+#   HUBRA_SIGNING_KEY   old format only, until Hubra ships an index key: the
+#                       private key of Hubra.pub. Delete it once the index
+#                       key is in use.
 #   HUBRA_READ_TOKEN    only while hubra-app/hubra is private: a token that can
 #                       read it (Contents: read)
 on:
@@ -68,24 +74,42 @@ jobs:
         working-directory: hubra/app/backend
         env:
           FLASK_APP: "hubra:create_app()"
+          INDEX_KEY: ${{ secrets.HUBRA_INDEX_KEY }}
           SIGNING_KEY: ${{ secrets.HUBRA_SIGNING_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          if [ -z "$SIGNING_KEY" ]; then echo "::error::add HUBRA_SIGNING_KEY to the plugin-signing environment"; exit 1; fi
           key="$RUNNER_TEMP/key.pem"
           trap 'rm -f "$key"' EXIT
-          (umask 077 && printf '%s\n' "$SIGNING_KEY" > "$key")
-          # Refuse to sign with any key but the official one.
-          python - "$key" <<'PY'
+          # Which key signs the index: the index key once Hubra ships one,
+          # else (old format) the plugin key. Refuse any other key.
+          mode=$(python - <<'PY'
+          from hubra.core.plugins.trust import official_keys
+          print("separate" if set(official_keys("index")) - set(official_keys("plugins")) else "single")
+          PY
+          )
+          if [ "$mode" = separate ]; then
+            if [ -z "$INDEX_KEY" ]; then echo "::error::add HUBRA_INDEX_KEY to the plugin-signing environment"; exit 1; fi
+            (umask 077 && printf '%s\n' "$INDEX_KEY" > "$key")
+          else
+            if [ -z "$SIGNING_KEY" ]; then echo "::error::add HUBRA_SIGNING_KEY to the plugin-signing environment"; exit 1; fi
+            (umask 077 && printf '%s\n' "$SIGNING_KEY" > "$key")
+          fi
+          python - "$key" "$mode" <<'PY'
           import sys
           from cryptography.hazmat.primitives import serialization
-          from hubra.core.plugins.trust import OFFICIAL_DIR, key_id, load_public
+          from hubra.core.plugins.trust import key_id, official_keys
           pub = serialization.load_pem_private_key(open(sys.argv[1], "rb").read(), None).public_key()
-          official = load_public((OFFICIAL_DIR / "Hubra.pub").read_text())
-          if key_id(pub) != key_id(official):
-              sys.exit(f"HUBRA_SIGNING_KEY is {key_id(pub)}, not the official key {key_id(official)}")
+          want = official_keys("index")
+          if key_id(pub) not in want:
+              sys.exit(f"the key is {key_id(pub)}, not the official index key {', '.join(want)}")
+          if sys.argv[2] == "separate" and key_id(pub) in official_keys("plugins"):
+              sys.exit("the index key is also a plugin key; a key has one purpose")
           PY
-          flask plugins build-index "$GITHUB_WORKSPACE/plugins.yaml" "$GITHUB_WORKSPACE/site" --key "$key"
+          args=()
+          if [ "$mode" = separate ]; then
+            for pub in hubra/core/plugins/keys/official/*.pub; do args+=(--plugin-key "$pub"); done
+          fi
+          flask plugins build-index "$GITHUB_WORKSPACE/plugins.yaml" "$GITHUB_WORKSPACE/site" --key "$key" "${args[@]}"
           cp "$GITHUB_WORKSPACE/README.md" "$GITHUB_WORKSPACE/site/"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
