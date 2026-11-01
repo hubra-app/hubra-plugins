@@ -4,7 +4,7 @@
 
 The official Marketplace of [Hubra](https://hubra.club): a signed `index.json`
 at **https://plugins.hubra.club/index.json**, which every Hubra trusts out of
-the box (signed with the Hubra project key, `Hubra.pub`).
+the box (plugins signed with the Hubra plugin key `Hubra.pub`, the index with the Hubra index key in `keys/official/index/`).
 
 ## How it works
 
