@@ -2,8 +2,9 @@ name: Publish the Marketplace
 
 # Reads every plugin repository in plugins.yaml, checks each release's signature
 # and checksum, writes index.json signed with the index key and publishes it
-# with GitHub Pages:
+# with GitHub Pages, next to the web pages in public/ (Marketplace and guide):
 #   https://plugins.hubra.club/index.json
+#   https://plugins.hubra.club/  and  /entwickeln/, /en/, /en/develop/
 # Then downloads that index and every archive it offers and checks them the way
 # a Hubra does (flask plugins check).
 # Runs on changes here, every hour (new releases and new plugin repositories),
@@ -111,6 +112,10 @@ jobs:
           fi
           flask plugins build-index "$GITHUB_WORKSPACE/plugins.yaml" "$GITHUB_WORKSPACE/site" --key "$key" "${args[@]}"
           cp "$GITHUB_WORKSPACE/README.md" "$GITHUB_WORKSPACE/site/"
+          # The web pages around the index (built from src/pages/ by
+          # tools/build.py and committed). They hold no index.json.
+          test ! -e "$GITHUB_WORKSPACE/public/index.json"
+          cp -R "$GITHUB_WORKSPACE/public/." "$GITHUB_WORKSPACE/site/"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: site

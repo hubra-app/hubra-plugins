@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build a plugin · Hubra Plugins</title>
+<meta name="description" content="How to build a plugin for Hubra: template, layout, backend, frontend, tests, signing and publishing to the marketplace.">
+<link rel="canonical" href="https://plugins.hubra.club/en/develop/">
+<link rel="alternate" hreflang="de-CH" href="https://plugins.hubra.club/entwickeln/">
+<link rel="alternate" hreflang="en" href="https://plugins.hubra.club/en/develop/">
+<link rel="alternate" hreflang="x-default" href="https://plugins.hubra.club/entwickeln/">
+<meta name="theme-color" content="#7441e0">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hubra Plugins">
+<meta property="og:title" content="Build a plugin · Hubra Plugins">
+<meta property="og:description" content="How to build a plugin for Hubra: template, layout, backend, frontend, tests, signing and publishing to the marketplace.">
+<meta property="og:url" content="https://plugins.hubra.club/en/develop/">
+<meta property="og:image" content="https://hubra.club/assets/og-en.png">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/assets/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/theme.js"></script>
+<link rel="stylesheet" href="/assets/market.css">
+<script src="/assets/market.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="/en/" aria-label="Hubra Plugins, marketplace">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#7441e0"/><path d="M21 14V50M21 35a11 11 0 0 1 22 0V50" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="45" r="4" fill="#fece2b"/></svg>
+      <span class="wordmark">hubra</span>
+      <span class="brand-sub">plugins</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/en/">Marketplace</a>
+      <a href="/en/develop/" aria-current="page">Build a plugin</a>
+      <a href="/index.json">index.json</a>
+      <span class="nav-extra">
+        <a href="https://hubra.club/en/plugins/">hubra.club</a>
+        <a href="/entwickeln/" hreflang="de-CH" lang="de-CH">Deutsch</a>
+      </span>
+    </nav>
+    <div class="top-actions">
+      <button class="icon-btn theme-btn" type="button" aria-label="Change colour scheme" title="Change colour scheme" hidden><svg class="i-auto" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/></svg><svg class="i-light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg><svg class="i-dark" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg></button>
+      <a class="lang" href="/entwickeln/" hreflang="de-CH" lang="de-CH" title="Deutsch">DE</a>
+      <a class="signin" href="https://hubra.club/en/plugins/">hubra.club</a>
+      <a class="btn btn-p btn-sm" href="https://sso.hubra.club/start">Start a club</a>
+      <button class="icon-btn menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="doc-hero">
+  <div class="wrap">
+    <p class="crumbs"><a href="/en/">Marketplace</a> › Build a plugin</p>
+    <h1>Build a plugin for Hubra.</h1>
+    <p>A plugin adds features to Hubra without changing Hubra itself: its own tables, an API, screens in the club app and settings. This page goes from the template to a signed release.</p>
+  </div>
+</div>
+
+<div class="doc">
+  <div class="wrap">
+  <nav class="toc" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#overview">What a plugin can do</a></li>
+      <li><a href="#template">Start from the template</a></li>
+      <li><a href="#layout">Layout</a></li>
+      <li><a href="#backend">Backend</a></li>
+      <li><a href="#frontend">Frontend</a></li>
+      <li><a href="#local">Develop and test locally</a></li>
+      <li><a href="#publish">Publish</a></li>
+      <li><a href="#rules">Rules that apply</a></li>
+      <li><a href="#more">Read more</a></li>
+    </ol>
+  </nav>
+  <article class="prose">
+    <h2 id="overview">What a plugin can do</h2>
+    <p>A plugin is a Python package with a small React frontend. It brings one or more <strong>modules</strong>, just like Hubra's built-in modules:</p>
+    <ul>
+      <li><strong>Backend:</strong> API routes with permissions, its own tables in every club, settings, navigation entries, event hooks and Celery tasks.</li>
+      <li><strong>Frontend:</strong> its own screens, tabs on built-in screens and cards in fixed places (slots) of the club app, translated into German and English.</li>
+      <li><strong>Versions:</strong> every version is signed, carries its changes and can be rolled back.</li>
+    </ul>
+    <p>Platform admins install a plugin once from the marketplace; then each club switches its modules on or off under <strong>Settings › Modules &amp; plugins</strong>.</p>
+    <p class="callout">A plugin runs with full access to the data of every club on a Hubra. So a Hubra installs only signed plugins, and on hubra.club we review every plugin before we install it.</p>
+
+    <h2 id="template">Start from the template</h2>
+    <p>The <a href="https://github.com/hubra-app/hubra-plugins-template">hubra-plugins-template</a> is a small working plugin (a notice board) with every part: a table, an API, a screen, a setting, a migration, a test, and the workflow that tests, signs and releases it.</p>
+    <ol>
+      <li>On GitHub, choose <strong>Use this template</strong> and name the repository <code>hubra-plugin-&lt;id&gt;</code>.</li>
+      <li>Rename everything called <code>example</code>: plugin id, package (<code>hubra_&lt;name&gt;</code>), module code, tables, API path, route and translations. The <a href="https://github.com/hubra-app/hubra-plugins-template#make-a-new-plugin">template's README</a> has the full table.</li>
+      <li>Replace the example migration with your own, set <code>version: "1.0.0"</code> and write the first <code>CHANGELOG.md</code> entry.</li>
+      <li>Import the rulesets from <code>.github/rulesets/</code> into the repository and turn on secret scanning.</li>
+    </ol>
+
+    <h2 id="layout">Layout</h2>
+<pre><code>plugin.yaml              # id, version, Hubra range, package, modules
+CHANGELOG.md             # "## 1.1.0" sections, shown before each update
+.releaseignore           # kept out of the release zip
+hubra_example/
+  __init__.py            # module = Module(...)
+  models.py              # SQLAlchemy models (one copy per club)
+  routes.py              # the API, with permission_required(...)
+migrations/              # Alembic revisions of this plugin only
+frontend/src/
+  index.tsx              # registerPlugin({...})
+  translations.json      # en-GB and de-CH
+tests/                   # runs with Hubra's pytest fixtures
+.github/workflows/release.yml</code></pre>
+    <p><code>plugin.yaml</code> describes the plugin. Its name, description and tags appear in the marketplace as written:</p>
+<pre><code>id: example
+name: Example
+version: "1.0.0"
+hubra: "&gt;=0.2,&lt;1"          # Hubra versions it works with
+description: "One line: what it does"
+author: Hubra
+homepage: https://github.com/hubra-app/hubra-plugin-example
+license: AGPL-3.0-or-later
+tags: [inventory]
+package: hubra_example      # must start with hubra_
+modules: [example]
+requires: [members]         # modules or plugins it needs
+migrations: migrations
+frontend: frontend/dist/plugin.js</code></pre>
+
+    <h2 id="backend">Backend</h2>
+    <p>The package defines <code>Module</code> objects like the built-in modules: blueprints, navigation, settings, permissions and tables. Module codes must not clash with Hubra's, and table names start with the plugin id.</p>
+<pre><code>from hubra.core.modules import Blueprint, Module, NavItem, SettingField
+
+module = Module(
+    code="example",
+    name="Example",
+    description="A notice board: short notes for the whole club",
+    default_enabled=False,
+    depends_on=("members",),
+    blueprints=(Blueprint("hubra_example.routes", "example_bp", "/api/v1/example"),),
+    nav=(NavItem("/app/example", "shell.nav.example", "note",
+                 section="more", perms=("example.notes.read",)),),
+    settings=(SettingField("max_notes", "int", default=50,
+                           label="Most notes on the board"),),
+    tables=("example_notes",),
+)</code></pre>
+    <p>The blueprint name sets the permission prefix: <code>example_bp</code> gives <code>example.notes.read</code>. Write migrations with <code>flask plugins revision</code>; they run in every club, with a version table of their own per plugin.</p>
+
+    <h2 id="frontend">Frontend</h2>
+    <p><code>frontend/src/index.tsx</code> registers what the plugin shows in the club app. Everything appears only while its module is on for the club and the person has the permission.</p>
+<pre><code>import { registerPlugin } from '@hubra/plugin-sdk'
+import { IconNote } from '@tabler/icons-react'
+import { NotesScreen } from './NotesScreen'
+import translations from './translations.json'
+
+registerPlugin({
+  id: 'example',
+  routes: [{ path: 'example', module: 'example', perm: 'example.notes.read', component: NotesScreen }],
+  icons: { note: IconNote },
+  translations, // { "en-GB": {...}, "de-CH": {...} }
+})</code></pre>
+    <p>Other places: <code>tabs</code> (a tab on a built-in screen) and <code>slots</code> (<code>account.cards</code>, <code>inventory.item</code>, <code>settings.module.actions</code>). React, Mantine, react-query, react-router and react-i18next come from the app at runtime; everything else, such as icons, is bundled.</p>
+
+    <h2 id="local">Develop and test locally</h2>
+    <p>Clone the plugin into <code>plugins/&lt;id&gt;</code> of a <a href="https://github.com/hubra-app/hubra">Hubra checkout</a>. With <code>HUBRA_PLUGINS_AUTOINSTALL=&lt;id&gt;</code> a local Hubra loads the plugin straight from the folder, without installing it.</p>
+<pre><code>cd hubra/app/backend
+pytest ../../plugins/&lt;id&gt;                              # tests, with Hubra's fixtures
+flask plugins revision &lt;id&gt; -m "..." --autogenerate   # a new migration
+cd ../frontend
+npm run typecheck:plugins
+npm run build:plugin -- ../../plugins/&lt;id&gt;            # --watch while you work</code></pre>
+    <p>The workflow in the plugin repository does the same on every push, against Hubra's current <code>main</code>.</p>
+
+    <h2 id="publish">Publish</h2>
+    <h3>In the official marketplace</h3>
+    <p>Each official plugin lives in a public repository <code>hubra-app/hubra-plugin-&lt;id&gt;</code>. To release:</p>
+    <ol>
+      <li>Bump <code>version</code> in <code>plugin.yaml</code> and add a <code>## &lt;version&gt;</code> section to <code>CHANGELOG.md</code>.</li>
+      <li>Merge, then publish a GitHub release tagged <code>v&lt;version&gt;</code>.</li>
+      <li>The workflow tests it, builds the frontend, signs it with the Hubra plugin key after approval, and attaches <code>&lt;id&gt;-&lt;version&gt;.zip</code> with its checksum.</li>
+      <li>This marketplace picks up the release within the hour, checks signature and checksum, signs the index again and lists the version here.</li>
+    </ol>
+    <p>Built a plugin that should be in the official marketplace? Write to us at <a href="mailto:hi@hubra.club">hi@hubra.club</a>.</p>
+    <h3>In a marketplace of your own</h3>
+    <p>Every Hubra can add more repositories. With keys of your own you sign the plugins and the index yourself, and put <code>index.json</code> on any web server, GitHub Pages for example:</p>
+<pre><code>flask plugins keygen index.pem                  # once: the index key
+flask plugins keygen plugins.pem                # once: the plugin key
+flask plugins repo ./plugins ./public --key index.pem --plugin-key plugins.pem --name "My plugins"
+flask plugins check https://me.github.io/plugins/index.json --key-id &lt;key id&gt;</code></pre>
+    <p>Platform admins then add the URL and the key id under <strong>Plugin catalogue › Repositories</strong>. Your plugins show up there as “Community”.</p>
+
+    <h2 id="rules">Rules that apply</h2>
+    <ul>
+      <li><strong>Migrations stay backwards compatible.</strong> A rollback resets the version, not the database. Add columns and tables, and remove them only a release later.</li>
+      <li><strong>Names of your own.</strong> Package starting with <code>hubra_</code>, tables prefixed with the plugin id, module codes that don't clash with Hubra's.</li>
+      <li><strong>One key, one purpose.</strong> Plugin keys sign plugins, index keys only the index. Private keys belong in a GitHub environment, never in a repository or organisation secret.</li>
+      <li><strong>Release tags are final.</strong> A broken version is not replaced; it is withdrawn and followed by a new version.</li>
+      <li><strong>Vulnerabilities</strong> are reported privately through the security page of the repository.</li>
+    </ul>
+
+    <h2 id="more">Read more</h2>
+    <ul>
+      <li><a href="https://github.com/hubra-app/hubra/blob/main/plugins/README.md">plugins/README.md</a>: everything about plugins, for admins and authors.</li>
+      <li><a href="https://github.com/hubra-app/hubra/blob/main/app/backend/hubra/modules/README.md">hubra/modules/README.md</a>: how modules work.</li>
+      <li><a href="https://github.com/hubra-app/hubra-plugin-keys">hubra-plugin-keys</a>: a bigger, real plugin to compare with.</li>
+      <li><a href="https://github.com/hubra-app/hubra-plugins">hubra-plugins</a>: how this marketplace is built and signed.</li>
+    </ul>
+    <p><a class="btn btn-s" href="/en/">To the marketplace <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+  </article>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-brand">
+      <a class="brand" href="/en/" aria-label="Hubra Plugins, marketplace">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#7441e0"/><path d="M21 14V50M21 35a11 11 0 0 1 22 0V50" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="45" r="4" fill="#fece2b"/></svg>
+        <span class="wordmark">hubra</span>
+        <span class="brand-sub">plugins</span>
+      </a>
+      <p>The official plugin marketplace of Hubra. Every plugin signed.</p>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <h2>Plugins</h2>
+        <ul>
+          <li><a href="/en/">Marketplace</a></li>
+          <li><a href="/en/develop/">Build a plugin</a></li>
+          <li><a href="/index.json">index.json (signed)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Hubra</h2>
+        <ul>
+          <li><a href="https://hubra.club/en/">hubra.club</a></li>
+          <li><a href="https://hubra.club/en/plugins/">Plugins at a glance</a></li>
+          <li><a href="https://hubra.club/en/security/">Security</a></li>
+          <li><a href="https://sso.hubra.club/start">Start a club</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Source</h2>
+        <ul>
+          <li><a href="https://github.com/hubra-app/hubra-plugins">Marketplace repository</a></li>
+          <li><a href="https://github.com/hubra-app/hubra-plugins-template">Plugin template</a></li>
+          <li><a href="https://github.com/hubra-app/hubra">Hubra</a></li>
+          <li><a href="https://github.com/hubra-app/hubra-plugins/security/policy">Report a vulnerability</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="https://hubra.club/en/imprint/">Imprint</a></li>
+          <li><a href="https://hubra.club/en/privacy/">Privacy</a></li>
+          <li><a href="mailto:hi@hubra.club">hi@hubra.club</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 Hubra</span>
+      <a href="/entwickeln/" hreflang="de-CH" lang="de-CH">Deutsch</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
