@@ -1,0 +1,24 @@
+name: Check the web pages
+
+# public/ is built from src/pages/ by tools/build.py and committed. This fails
+# when someone edits a page but forgets to rebuild, or a link points at a page
+# that doesn't exist. Standard library Python only, no key, no third-party code.
+on:
+  pull_request:
+    paths: ["src/**", "public/**", "tools/**", ".github/workflows/site.yml"]
+  push:
+    branches: [main]
+    paths: ["src/**", "public/**", "tools/**", ".github/workflows/site.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: python3 tools/build.py --check
+      - run: node --check public/assets/market.js

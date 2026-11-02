@@ -32,6 +32,19 @@ the box (plugins signed with the Hubra plugin key `Hubra.pub`, the index with th
 | Shared inbox (IMAP) | [hubra-plugin-imap-inbox](https://github.com/hubra-app/hubra-plugin-imap-inbox) |
 | Keys | [hubra-plugin-keys](https://github.com/hubra-app/hubra-plugin-keys) |
 
+## The web pages
+
+Next to `index.json`, plugins.hubra.club serves a small site that hubra.club
+links to: the Marketplace (`/`, `/en/`), which lists the plugins from
+`index.json` in the browser, and the guide for plugin authors
+(`/entwickeln/`, `/en/develop/`). The pages are written in `src/pages/` and
+built into `public/` with `python3 tools/build.py` (standard library only;
+`--check` fails when `public/` is out of date or a link is broken). `public/`
+is committed, and the publish workflow copies it next to the index. The look
+and `public/assets/site.css`, `theme.js` and the fonts are copied from
+[hubra.club](https://github.com/hubra-app/hubra.club); `market.css` and
+`market.js` are this site's own.
+
 ## A new plugin
 
 From the Hubra repository: `python3 tools/plugin_repo/make_plugin_repo.py

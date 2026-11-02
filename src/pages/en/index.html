@@ -1,0 +1,96 @@
+<!--
+path: /en/
+lang: en
+alt: /
+title: Hubra Plugins: the marketplace
+description: The official plugin marketplace of Hubra: bank import, budgets, Discord, shared inbox, keys and guides. Every plugin signed and reviewed.
+-->
+<main id="main">
+<div class="doc-hero page-hero">
+  <div class="wrap">
+    <p class="crumbs"><a href="https://hubra.club/en/">Hubra</a> › <a href="https://hubra.club/en/plugins/">Plugins</a> › Marketplace</p>
+    <h1>Plugins for Hubra.</h1>
+    <p>More features for your club, each one its own plugin. Every plugin is signed, reviewed by us, and switched on only for the clubs that want it.</p>
+  </div>
+</div>
+
+<section id="marketplace" style="padding-top:48px">
+  <div class="wrap">
+    <div class="market-bar" data-market-bar hidden>
+      <input type="search" placeholder="Search plugins" aria-label="Search plugins">
+      <div class="chips" role="group" aria-label="Filter by area"></div>
+      <span class="market-status" data-market-status aria-live="polite"></span>
+    </div>
+    <div class="grid" data-market>
+      <article class="feat plugin-card" id="bank-import">
+        <div class="top-row"><div class="tags"><span class="tag">finance</span></div></div>
+        <h3>Bank file import</h3>
+        <p>Import bank statements (camt.053, camt.054, MT940 or CSV). Payments are matched to invoices and marked paid, other bookings go into the books by your rules, with a dry run first.</p>
+        <p class="links"><a href="https://github.com/hubra-app/hubra-plugin-bank-import">Source</a></p>
+      </article>
+      <article class="feat plugin-card" id="budgets">
+        <div class="top-row"><div class="tags"><span class="tag">finance</span></div></div>
+        <h3>Budgets</h3>
+        <p>A yearly budget per transaction category, compared with what was booked. Approve and lock it, and copy it to the next year.</p>
+        <p class="links"><a href="https://github.com/hubra-app/hubra-plugin-budgets">Source</a></p>
+      </article>
+      <article class="feat plugin-card" id="discord">
+        <div class="top-row"><div class="tags"><span class="tag">communication</span></div></div>
+        <h3>Discord</h3>
+        <p>The Hubra bot on your Discord server: announcements, roles, group channels, Discord events, poll buttons, personal commands and direct messages.</p>
+        <p class="links"><a href="https://github.com/hubra-app/hubra-plugin-discord">Source</a></p>
+      </article>
+      <article class="feat plugin-card" id="guides">
+        <div class="top-row"><div class="tags"><span class="tag">inventory</span></div></div>
+        <h3>Guides</h3>
+        <p>A usage guide per machine or tool, in Markdown or as a link to a manual or video, shown on the inventory item.</p>
+        <p class="links"><a href="https://github.com/hubra-app/hubra-plugin-guides">Source</a></p>
+      </article>
+      <article class="feat plugin-card" id="keys">
+        <div class="top-row"><div class="tags"><span class="tag">inventory</span></div></div>
+        <h3>Keys</h3>
+        <p>Physical keys, cards and fobs: who holds which, with a handover log. Members see their keys on their account page.</p>
+        <p class="links"><a href="https://github.com/hubra-app/hubra-plugin-keys">Source</a></p>
+      </article>
+      <article class="feat plugin-card" id="imap-inbox">
+        <div class="top-row"><div class="tags"><span class="tag">communication</span></div></div>
+        <h3>Shared inbox (IMAP)</h3>
+        <p>Read club mailboxes hosted anywhere (Infomaniak, Hostpoint, Gmail with an app password...) inside Hubra. Read-only by default, each mailbox visible to one group, passwords stored encrypted.</p>
+        <p class="links"><a href="https://github.com/hubra-app/hubra-plugin-imap-inbox">Source</a></p>
+      </article>
+    </div>
+    <p class="trust-line" data-market-trust>This list comes from <a href="/index.json">index.json</a>, signed with the Hubra index key.</p>
+  </div>
+</section>
+
+<section id="how" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How a plugin gets to your club</span>
+      <h2>We review, you switch it on.</h2>
+    </div>
+    <ol class="steps">
+      <li><h3>Reviewed and installed</h3><p>A plugin runs with access to the platform's data. So only Hubra's platform admins install plugins, after a review, in the plugin catalogue.</p></li>
+      <li><h3>Your board switches it on</h3><p>Under <strong>Settings › Modules &amp; plugins</strong> you switch a plugin on or off for your club, like any built-in module.</p></li>
+      <li><h3>Signed updates</h3><p>Every version is signed and comes with its changes. A Hubra installs only what is signed with a key it trusts, and can go back to the previous version.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="more" style="padding-top:0">
+  <div class="wrap duo">
+    <a class="feat link-card" href="/en/develop/">
+      <span class="tag">For developers</span>
+      <h3>Build your own plugin</h3>
+      <p>From the template to a signed release: layout, backend, frontend, tests and publishing.</p>
+      <span class="more-link">Build a plugin →</span>
+    </a>
+    <a class="feat link-card" href="https://hubra.club/en/security/">
+      <span class="tag">Security</span>
+      <h3>Signed and verifiable</h3>
+      <p>Plugins and the index have separate keys. Every Hubra checks both when it installs, and every plugin's source code is public.</p>
+      <span class="more-link">Security at Hubra →</span>
+    </a>
+  </div>
+</section>
+</main>
