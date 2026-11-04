@@ -18,7 +18,10 @@
 .market-status { color: var(--text-3); font-size: .92rem; margin-left: auto; }
 
 /* Plugin cards */
-.plugin-card { position: relative; }
+/* Grid children default to min-width: auto, so one long word (a checksum,
+   a URL in the release notes) would widen the card instead of wrapping. */
+.plugin-card { position: relative; min-width: 0; }
+.plugin-card > * { min-width: 0; overflow-wrap: anywhere; }
 .plugin-card .top-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .plugin-card .ver { font: 600 .82rem/1 var(--mono); color: var(--text-3); }
 .plugin-card .tags { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -27,7 +30,11 @@
 .plugin-card dd { margin: 0; color: var(--text-2); min-width: 0; overflow-wrap: anywhere; }
 .plugin-card details { border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; }
 .plugin-card summary { cursor: pointer; font-weight: 600; color: var(--accent-text); font-size: .92rem; }
-.plugin-card .changes { white-space: pre-wrap; font-size: .88rem; color: var(--text-2); margin-top: 8px; max-height: 16em; overflow: auto; }
+.plugin-card .changes { overflow-wrap: anywhere; font-size: .88rem; color: var(--text-2); margin-top: 8px; max-height: 18em; overflow: auto; display: grid; gap: 8px; }
+.plugin-card .changes ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.plugin-card .changes p, .plugin-card .changes li { color: var(--text-2); font-size: inherit; }
+.plugin-card .changes strong { color: var(--text); }
+.plugin-card .changes .notes-h { font-weight: 600; color: var(--text); }
 .plugin-card .links { display: flex; flex-wrap: wrap; gap: 14px; font-size: .92rem; }
 .plugin-card .links a { color: var(--accent-text); font-weight: 600; text-decoration: none; }
 .plugin-card .links a:hover { text-decoration: underline; }

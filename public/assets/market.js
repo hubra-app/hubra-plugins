@@ -105,6 +105,63 @@
       if (status) status.textContent = L.count(shown)
     }
 
+    // Release notes are Markdown with hard-wrapped lines. Show them as
+    // flowing paragraphs and list items (lines that continue an item are
+    // joined), with **bold** and `code`; built with DOM nodes, never HTML.
+    var inline = function (parent, text) {
+      text.split(/(\*\*[^*]+\*\*|`[^`]+`)/).forEach(function (part) {
+        if (!part) return
+        if (/^\*\*.+\*\*$/.test(part)) parent.appendChild(el('strong', null, part.slice(2, -2)))
+        else if (/^`.+`$/.test(part)) parent.appendChild(el('code', null, part.slice(1, -1)))
+        else parent.appendChild(document.createTextNode(part))
+      })
+    }
+    var notes = function (md) {
+      var box = el('div', 'changes')
+      var list = null
+      var cur = null
+      var flush = function () {
+        cur = null
+      }
+      md.replace(/\r/g, '').split('\n').forEach(function (raw) {
+        var line = raw.trim()
+        if (!line) {
+          flush()
+          list = null
+          return
+        }
+        if (/^#{1,6}\s/.test(line)) {
+          flush()
+          list = null
+          var h = line.replace(/^#+\s*/, '')
+          // The version heading repeats the summary; keep other headings.
+          if (h !== (md.match(/^#+\s*(\S+)/) || [])[1]) box.appendChild(el('p', 'notes-h', h))
+          return
+        }
+        var item = line.match(/^[-*]\s+(.*)$/)
+        if (item) {
+          if (!list) {
+            list = el('ul')
+            box.appendChild(list)
+          }
+          cur = el('li')
+          list.appendChild(cur)
+          cur._text = item[1]
+        } else if (cur) {
+          cur._text += ' ' + line
+        } else {
+          list = null
+          cur = el('p')
+          box.appendChild(cur)
+          cur._text = line
+        }
+      })
+      Array.prototype.forEach.call(box.querySelectorAll('li, p:not(.notes-h)'), function (n) {
+        inline(n, n._text || '')
+      })
+      return box
+    }
+
     var card = function (p) {
       var id = String(p.id || '')
       var de = !en && DE[id]
@@ -140,7 +197,7 @@
       if (p.changes) {
         var det = el('details')
         det.appendChild(el('summary', null, L.changes + ' ' + String(p.version || '')))
-        det.appendChild(el('div', 'changes', String(p.changes)))
+        det.appendChild(notes(String(p.changes)))
         n.appendChild(det)
       }
       var links = el('p', 'links')

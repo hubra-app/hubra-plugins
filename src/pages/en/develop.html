@@ -19,13 +19,13 @@ description: How to build a plugin for Hubra: template, layout, backend, fronten
   <!-- toc -->
   <article class="prose">
     <h2 id="overview">What a plugin can do</h2>
-    <p>A plugin is a Python package with a small React frontend. It brings one or more <strong>modules</strong>, just like Hubra's built-in modules:</p>
+    <p>Plugins are how the platform ships and updates modules without rolling out the whole app again. A plugin is a Python package with a small React frontend. It brings one or more <strong>modules</strong>, just like Hubra's built-in modules:</p>
     <ul>
       <li><strong>Backend:</strong> API routes with permissions, its own tables in every club, settings, navigation entries, event hooks and Celery tasks.</li>
       <li><strong>Frontend:</strong> its own screens, tabs on built-in screens and cards in fixed places (slots) of the club app, translated into German and English.</li>
       <li><strong>Versions:</strong> every version is signed, carries its changes and can be rolled back.</li>
     </ul>
-    <p>Platform admins install a plugin once from the marketplace; then each club switches its modules on or off under <strong>Settings › Modules &amp; plugins</strong>.</p>
+    <p>Platform admins install a plugin once from the marketplace; its modules then show up for every club like built-in ones, and each club switches them on or off under <strong>Settings › Modules</strong>.</p>
     <p class="callout">A plugin runs with full access to the data of every club on a Hubra. So a Hubra installs only signed plugins, and on hubra.club we review every plugin before we install it.</p>
 
     <h2 id="template">Start from the template</h2>

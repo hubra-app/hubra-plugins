@@ -61,18 +61,18 @@ T = {
         "home_label": "Hubra Plugins, Marktplatz",
         "nav_label": "Hauptnavigation",
         "nav": [("/", "Marktplatz"), ("/entwickeln/", "Plugins entwickeln"), ("/index.json", "index.json")],
-        "web": ("hubra.club", WEB + "/plugins/"),
-        "start": "Verein starten",
+        "web": ("hubra.club", WEB + "/module/"),
+        "start": ("Plugin entwickeln", "/entwickeln/"),
         "menu": "Menü",
         "theme": "Farbschema wechseln",
         "other_lang": ("EN", "en", "English"),
         "foot": [
             ("Plugins", [("/", "Marktplatz"), ("/entwickeln/", "Plugins entwickeln"), ("/index.json", "index.json (signiert)")]),
-            ("Hubra", [(WEB + "/", "hubra.club"), (WEB + "/plugins/", "Plugins im Überblick"), (WEB + "/sicherheit/", "Sicherheit"), (SSO + "/start", "Verein starten")]),
+            ("Hubra", [(WEB + "/", "hubra.club"), (WEB + "/module/", "Module für Vereine"), (WEB + "/sicherheit/", "Sicherheit")]),
             ("Quellcode", [(GH + "/hubra-plugins", "Marktplatz-Repository"), (GH + "/hubra-plugins-template", "Plugin-Vorlage"), (GH + "/hubra", "Hubra"), (GH + "/hubra-plugins/security/policy", "Sicherheitslücke melden")]),
             ("Rechtliches", [(WEB + "/impressum/", "Impressum"), (WEB + "/datenschutz/", "Datenschutz"), ("mailto:hi@hubra.club", "hi@hubra.club")]),
         ],
-        "tagline": "Der offizielle Plugin-Marktplatz von Hubra. Jedes Plugin signiert.",
+        "tagline": "Plugins liefern Module für die Hubra-Plattform aus. Jedes Plugin signiert.",
         "toc": "Inhalt",
         "copy": "© 2026 Hubra",
     },
@@ -84,18 +84,18 @@ T = {
         "home_label": "Hubra Plugins, marketplace",
         "nav_label": "Main navigation",
         "nav": [("/en/", "Marketplace"), ("/en/develop/", "Build a plugin"), ("/index.json", "index.json")],
-        "web": ("hubra.club", WEB + "/en/plugins/"),
-        "start": "Start a club",
+        "web": ("hubra.club", WEB + "/en/modules/"),
+        "start": ("Build a plugin", "/en/develop/"),
         "menu": "Menu",
         "theme": "Change colour scheme",
         "other_lang": ("DE", "de-CH", "Deutsch"),
         "foot": [
             ("Plugins", [("/en/", "Marketplace"), ("/en/develop/", "Build a plugin"), ("/index.json", "index.json (signed)")]),
-            ("Hubra", [(WEB + "/en/", "hubra.club"), (WEB + "/en/plugins/", "Plugins at a glance"), (WEB + "/en/security/", "Security"), (SSO + "/start", "Start a club")]),
+            ("Hubra", [(WEB + "/en/", "hubra.club"), (WEB + "/en/modules/", "Modules for clubs"), (WEB + "/en/security/", "Security")]),
             ("Source", [(GH + "/hubra-plugins", "Marketplace repository"), (GH + "/hubra-plugins-template", "Plugin template"), (GH + "/hubra", "Hubra"), (GH + "/hubra-plugins/security/policy", "Report a vulnerability")]),
             ("Legal", [(WEB + "/en/imprint/", "Imprint"), (WEB + "/en/privacy/", "Privacy"), ("mailto:hi@hubra.club", "hi@hubra.club")]),
         ],
-        "tagline": "The official plugin marketplace of Hubra. Every plugin signed.",
+        "tagline": "Plugins ship modules for the Hubra platform. Every plugin signed.",
         "toc": "Contents",
         "copy": "© 2026 Hubra",
     },
@@ -242,7 +242,7 @@ def render(page: Page, pages_by_path: dict[str, Page]) -> str:
       <button class="icon-btn theme-btn" type="button" aria-label="{t["theme"]}" title="{t["theme"]}" hidden>{ICON_THEME}</button>
       <a class="lang" href="{other_href}" hreflang="{other_hreflang}" lang="{other_hreflang}" title="{other_name}">{other_label}</a>
       <a class="signin" href="{t["web"][1]}">{t["web"][0]}</a>
-      <a class="btn btn-p btn-sm" href="{SSO}/start">{t["start"]}</a>
+      <a class="btn btn-p btn-sm" href="{t["start"][1]}">{t["start"][0]}</a>
       <button class="icon-btn menu-btn" type="button" aria-label="{t["menu"]}" aria-expanded="false" aria-controls="nav" hidden>{ICON_MENU}</button>
     </div>
   </div>
