@@ -23,14 +23,21 @@ the box (plugins signed with the Hubra plugin key `Hubra.pub`, the index with th
   `withdrawn: {"1.2.0": "why"}` to its entry: Hubra warns everyone who has it,
   and updates skip it.
 
-| Plugin | Repository |
-| --- | --- |
-| Bank file import | [hubra-plugin-bank-import](https://github.com/hubra-app/hubra-plugin-bank-import) |
-| Budgets | [hubra-plugin-budgets](https://github.com/hubra-app/hubra-plugin-budgets) |
-| Discord | [hubra-plugin-discord](https://github.com/hubra-app/hubra-plugin-discord) |
-| Guides | [hubra-plugin-guides](https://github.com/hubra-app/hubra-plugin-guides) |
-| Shared inbox (IMAP) | [hubra-plugin-imap-inbox](https://github.com/hubra-app/hubra-plugin-imap-inbox) |
-| Keys | [hubra-plugin-keys](https://github.com/hubra-app/hubra-plugin-keys) |
+| Plugin | Repository | Version |
+| --- | --- | --- |
+| Bank file import | [hubra-plugin-bank-import](https://github.com/hubra-app/hubra-plugin-bank-import) | [1.2.0](https://github.com/hubra-app/hubra-plugin-bank-import/releases/tag/v1.2.0) |
+| Budgets | [hubra-plugin-budgets](https://github.com/hubra-app/hubra-plugin-budgets) | [1.1.0](https://github.com/hubra-app/hubra-plugin-budgets/releases/tag/v1.1.0) |
+| Codes | [hubra-plugin-codes](https://github.com/hubra-app/hubra-plugin-codes) | [2.0.0](https://github.com/hubra-app/hubra-plugin-codes/releases/tag/v2.0.0) |
+| Discord | [hubra-plugin-discord](https://github.com/hubra-app/hubra-plugin-discord) | [2.5.0](https://github.com/hubra-app/hubra-plugin-discord/releases/tag/v2.5.0) |
+| Guides | [hubra-plugin-guides](https://github.com/hubra-app/hubra-plugin-guides) | [1.1.0](https://github.com/hubra-app/hubra-plugin-guides/releases/tag/v1.1.0) |
+| Inventory | [hubra-plugin-inventory](https://github.com/hubra-app/hubra-plugin-inventory) | [2.1.0](https://github.com/hubra-app/hubra-plugin-inventory/releases/tag/v2.1.0) |
+| Keys | [hubra-plugin-keys](https://github.com/hubra-app/hubra-plugin-keys) | [1.1.0](https://github.com/hubra-app/hubra-plugin-keys/releases/tag/v1.1.0) |
+| Shared inbox (IMAP) | [hubra-plugin-imap-inbox](https://github.com/hubra-app/hubra-plugin-imap-inbox) | [1.1.0](https://github.com/hubra-app/hubra-plugin-imap-inbox/releases/tag/v1.1.0) |
+
+The version is each plugin's latest GitHub release. After every plugin
+release, or when a new plugin is added, update this table and the other
+plugin lists with the checklist in
+[hubra/docs/plugin-releases.md](https://github.com/hubra-app/hubra/blob/main/docs/plugin-releases.md).
 
 ## The web pages
 
