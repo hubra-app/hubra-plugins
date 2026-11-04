@@ -19,13 +19,13 @@ description: So baut ihr ein Plugin für Hubra: Vorlage, Aufbau, Backend, Fronte
   <!-- toc -->
   <article class="prose">
     <h2 id="ueberblick">Was ein Plugin kann</h2>
-    <p>Ein Plugin ist ein Python-Paket mit einem kleinen React-Frontend. Es bringt eines oder mehrere <strong>Module</strong> mit, genau wie die eingebauten Module von Hubra:</p>
+    <p>Plugins sind der Weg, wie die Plattform Module ausliefert und aktualisiert, ohne die ganze App neu auszurollen. Ein Plugin ist ein Python-Paket mit einem kleinen React-Frontend. Es bringt eines oder mehrere <strong>Module</strong> mit, genau wie die eingebauten Module von Hubra:</p>
     <ul>
       <li><strong>Backend:</strong> API-Routen mit Berechtigungen, eigene Tabellen in jedem Verein, Einstellungen, Einträge in der Navigation, Event-Hooks und Celery-Aufgaben.</li>
       <li><strong>Frontend:</strong> eigene Seiten, Tabs auf eingebauten Seiten und Karten an festen Stellen (Slots) der Vereins-App, mit Übersetzungen in Deutsch und Englisch.</li>
       <li><strong>Versionen:</strong> jede Version ist signiert, hat ihre Änderungen dabei und kann zurückgerollt werden.</li>
     </ul>
-    <p>Plattform-Admins installieren ein Plugin einmal aus dem Marktplatz, danach schaltet jeder Verein seine Module unter <strong>Einstellungen › Module &amp; Plugins</strong> ein oder aus.</p>
+    <p>Plattform-Admins installieren ein Plugin einmal aus dem Marktplatz, danach erscheinen seine Module bei jedem Verein wie eingebaute Module, und der Verein schaltet sie unter <strong>Einstellungen › Module</strong> ein oder aus.</p>
     <p class="callout">Ein Plugin läuft mit vollem Zugriff auf die Daten aller Vereine einer Hubra. Darum installiert eine Hubra nur signierte Plugins, und auf hubra.club prüfen wir jedes Plugin, bevor wir es installieren.</p>
 
     <h2 id="vorlage">Mit der Vorlage starten</h2>
