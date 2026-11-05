@@ -129,9 +129,12 @@ license: AGPL-3.0-or-later
 tags: [inventory]
 package: hubra_example      # must start with hubra_
 modules: [example]
-requires: [members]         # modules or plugins it needs
+requires: [members]         # modules it needs
+# depends:                  # plugins it needs, with versions
+#   inventory: "&gt;=2.0,&lt;3"
 migrations: migrations
 frontend: frontend/dist/plugin.js</code></pre>
+    <p>A plugin that needs another plugin is an <strong>add-on</strong> of it: the Marketplace and the Plugin catalogue show it under that plugin. Name the plugin under <code>depends:</code> with a version range, so an update that needs a newer version stops and says which. The template&#39;s release check asks for it.</p>
 
     <h2 id="backend">Backend</h2>
     <p>The package defines <code>Module</code> objects like the built-in modules: blueprints, navigation, settings, permissions and tables. Module codes must not clash with Hubra's, and table names start with the plugin id.</p>
