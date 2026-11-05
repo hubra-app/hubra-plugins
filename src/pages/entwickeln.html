@@ -63,9 +63,12 @@ license: AGPL-3.0-or-later
 tags: [inventory]
 package: hubra_example      # muss mit hubra_ beginnen
 modules: [example]
-requires: [members]         # Module oder Plugins, die es braucht
+requires: [members]         # Module, die es braucht
+# depends:                  # Plugins, die es braucht, mit Versionen
+#   inventory: "&gt;=2.0,&lt;3"
 migrations: migrations
 frontend: frontend/dist/plugin.js</code></pre>
+    <p>Braucht ein Plugin ein anderes Plugin, ist es ein <strong>Add-on</strong> davon: Marktplatz und Plugin-Katalog zeigen es unter diesem Plugin. Nenne das Plugin unter <code>depends:</code> mit einem Versionsbereich, dann stoppt ein Update, das eine neuere Version braucht, und sagt welche. Die Release-Prüfung der Vorlage verlangt das.</p>
 
     <h2 id="backend">Backend</h2>
     <p>Das Paket definiert <code>Module</code>-Objekte wie die eingebauten Module: Blueprints, Navigation, Einstellungen, Berechtigungen und Tabellen. Modul-Codes dürfen nicht mit denen von Hubra kollidieren, Tabellen beginnen mit der Plugin-ID.</p>

@@ -65,8 +65,8 @@
     }
     var TAGS_DE = { finance: 'Finanzen', inventory: 'Inventar', communication: 'Kommunikation', mail: 'Mail', switzerland: 'Schweiz', example: 'Beispiel' }
     var L = en
-      ? { all: 'All', version: 'Version', released: 'Released', hubra: 'Works with', needs: 'Needs', versions: 'Versions', changes: 'What changed in', source: 'Source', download: 'Download', none: 'No plugin matches.', count: function (n) { return n + (n === 1 ? ' plugin' : ' plugins') }, updated: 'Index updated', key: 'signed with key', withdrawn: 'Withdrawn:' }
-      : { all: 'Alle', version: 'Version', released: 'Veröffentlicht', hubra: 'Läuft mit', needs: 'Braucht', versions: 'Versionen', changes: 'Neu in', source: 'Quellcode', download: 'Herunterladen', none: 'Kein Plugin passt.', count: function (n) { return n + ' Plugin' + (n === 1 ? '' : 's') }, updated: 'Index aktualisiert', key: 'signiert mit Schlüssel', withdrawn: 'Zurückgezogen:' }
+      ? { all: 'All', version: 'Version', released: 'Released', hubra: 'Works with', needs: 'Needs', versions: 'Versions', changes: 'What changed in', source: 'Source', download: 'Download', none: 'No plugin matches.', count: function (n) { return n + (n === 1 ? ' plugin' : ' plugins') }, updated: 'Index updated', key: 'signed with key', withdrawn: 'Withdrawn:', addons: 'Add-ons', addonOf: function (n) { return 'Add-on to ' + n }, needsPlugin: 'Needs the plugin' }
+      : { all: 'Alle', version: 'Version', released: 'Veröffentlicht', hubra: 'Läuft mit', needs: 'Braucht', versions: 'Versionen', changes: 'Neu in', source: 'Quellcode', download: 'Herunterladen', none: 'Kein Plugin passt.', count: function (n) { return n + ' Plugin' + (n === 1 ? '' : 's') }, updated: 'Index aktualisiert', key: 'signiert mit Schlüssel', withdrawn: 'Zurückgezogen:', addons: 'Add-ons', addonOf: function (n) { return 'Add-on zu ' + n }, needsPlugin: 'Braucht das Plugin' }
     var el = function (tag, cls, text) {
       var n = document.createElement(tag)
       if (cls) n.className = cls
@@ -92,17 +92,70 @@
     var cards = []
     var tag = ''
 
+    var matches = function (c, q) {
+      return (!tag || c.tags.indexOf(tag) >= 0) && (!q || c.text.indexOf(q) >= 0)
+    }
+    // A card shows when it or one of its add-ons matches; an add-on shows
+    // when it matches or its parent does.
     var filter = function () {
       var q = (search ? search.value : '').trim().toLowerCase()
       var shown = 0
       cards.forEach(function (c) {
-        var on = (!tag || c.tags.indexOf(tag) >= 0) && (!q || c.text.indexOf(q) >= 0)
-        c.node.hidden = !on
+        var on = matches(c, q)
+        var any = false
+        c.addons.forEach(function (a) {
+          var aOn = on || matches(a, q)
+          a.node.hidden = !aOn
+          if (aOn) {
+            any = true
+            shown++
+          }
+        })
+        c.node.hidden = !on && !any
+        if (c.box) c.box.hidden = !any
         if (on) shown++
       })
       var empty = grid.querySelector('.market-empty')
       if (empty) empty.hidden = shown > 0
       if (status) status.textContent = L.count(shown)
+    }
+
+    // The plugin each one is an add-on of: the index says so (parent), or,
+    // in an index built before that, the first plugin under depends:, else
+    // the plugin providing the first module under requires:.
+    var parents = function (list) {
+      var ids = {}
+      var provides = {}
+      list.forEach(function (p) {
+        ids[p.id] = true
+        ;(Array.isArray(p.modules) ? p.modules : []).forEach(function (m) {
+          if (!(m in provides)) provides[m] = p.id
+        })
+      })
+      var out = {}
+      list.forEach(function (p) {
+        var parent = ''
+        if (typeof p.parent === 'string') parent = p.parent
+        else {
+          var deps = p.depends && typeof p.depends === 'object' ? Object.keys(p.depends) : []
+          parent = deps.filter(function (d) { return d !== p.id })[0] || ''
+          if (!parent) {
+            ;(Array.isArray(p.requires) ? p.requires : []).some(function (m) {
+              if (provides[m] && provides[m] !== p.id) parent = provides[m]
+              return Boolean(parent)
+            })
+          }
+        }
+        out[p.id] = parent && ids[parent] && parent !== p.id ? parent : ''
+      })
+      // No nesting under a plugin that is itself nested, and no loops.
+      Object.keys(out).forEach(function (id) {
+        if (out[id] && out[out[id]]) out[id] = ''
+      })
+      return out
+    }
+    var displayName = function (p) {
+      return (!en && DE[p.id] ? DE[p.id][0] : p.name) || p.id || ''
     }
 
     // Release notes are Markdown with hard-wrapped lines. Show them as
@@ -162,13 +215,14 @@
       return box
     }
 
-    var card = function (p) {
+    var card = function (p, opts) {
+      opts = opts || {}
       var id = String(p.id || '')
       var de = !en && DE[id]
       var name = de ? de[0] : String(p.name || id)
       var desc = de ? de[1] : String(p.description || '')
       var tags = Array.isArray(p.tags) ? p.tags.map(String) : []
-      var n = el('article', 'feat plugin-card')
+      var n = el(opts.addon ? 'section' : 'article', opts.addon ? 'addon' : 'feat plugin-card')
       n.id = id
       var top = el('div', 'top-row')
       var tg = el('div', 'tags')
@@ -178,7 +232,8 @@
       top.appendChild(tg)
       top.appendChild(el('span', 'ver', 'v' + String(p.version || '')))
       n.appendChild(top)
-      n.appendChild(el('h3', null, name))
+      n.appendChild(el(opts.addon ? 'h4' : 'h3', null, name))
+      if (opts.addon) n.appendChild(el('p', 'addon-of', L.addonOf(opts.parentName)))
       n.appendChild(el('p', null, desc))
       if (p.yanked) n.appendChild(el('p', 'yanked', L.withdrawn + ' ' + String(p.yanked)))
       var dl = el('dl')
@@ -190,6 +245,10 @@
       row(L.released, p.date ? date(p.date) : '')
       row(L.hubra, p.hubra ? 'Hubra ' + String(p.hubra) : '')
       row(L.needs, Array.isArray(p.requires) && p.requires.length ? p.requires.join(', ') : '')
+      row(L.needsPlugin, p.depends && typeof p.depends === 'object' ? Object.keys(p.depends).map(function (d) {
+        var r = String(p.depends[d] || '')
+        return (opts.names && opts.names[d] ? opts.names[d] : d) + (r ? ' ' + r : '')
+      }).join(', ') : '')
       row(L.versions, Array.isArray(p.versions) ? p.versions.map(function (v) {
         return String(v.version)
       }).join(', ') : '')
@@ -214,8 +273,20 @@
         links.appendChild(z)
       }
       if (links.children.length) n.appendChild(links)
-      cards.push({ node: n, tags: tags, text: (id + ' ' + name + ' ' + desc + ' ' + tags.map(tagName).join(' ') + ' ' + tags.join(' ')).toLowerCase() })
-      return n
+      var entry = { node: n, tags: tags, text: (id + ' ' + name + ' ' + desc + ' ' + tags.map(tagName).join(' ') + ' ' + tags.join(' ')).toLowerCase(), addons: [] }
+      if (!opts.addon) cards.push(entry)
+      if (opts.addons && opts.addons.length) {
+        var box = el('div', 'addons')
+        box.appendChild(el('p', 'addons-h', L.addons + ' (' + opts.addons.length + ')'))
+        opts.addons.forEach(function (a) {
+          var sub = card(a, { addon: true, parentName: name, names: opts.names })
+          box.appendChild(sub.node)
+          entry.addons.push(sub)
+        })
+        entry.box = box
+        n.insertBefore(box, links.parentNode === n ? links : null)
+      }
+      return opts.addon ? entry : n
     }
 
     fetch('/index.json', { credentials: 'omit', cache: 'no-cache' })
@@ -229,9 +300,21 @@
           var nb = (!en && DE[b.id] ? DE[b.id][0] : b.name) || ''
           return String(na).localeCompare(String(nb), en ? 'en' : 'de')
         })
+        list = list.filter(function (p) {
+          return p && p.id
+        })
+        var parentOf = parents(list)
+        var names = {}
+        list.forEach(function (p) {
+          names[p.id] = displayName(p)
+        })
         var frag = document.createDocumentFragment()
         list.forEach(function (p) {
-          if (p && p.id) frag.appendChild(card(p))
+          if (parentOf[p.id]) return
+          var addons = list.filter(function (a) {
+            return parentOf[a.id] === p.id
+          })
+          frag.appendChild(card(p, { addons: addons, names: names }))
         })
         var empty = el('p', 'market-empty', L.none)
         empty.hidden = true
