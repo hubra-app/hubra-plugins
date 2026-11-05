@@ -25,14 +25,26 @@ the box (plugins signed with the Hubra plugin key `Hubra.pub`, the index with th
 
 | Plugin | Repository | Version |
 | --- | --- | --- |
+| Assistant | [hubra-plugin-assistant](https://github.com/hubra-app/hubra-plugin-assistant) | [1.0.0](https://github.com/hubra-app/hubra-plugin-assistant/releases/tag/v1.0.0) |
 | Bank file import | [hubra-plugin-bank-import](https://github.com/hubra-app/hubra-plugin-bank-import) | [1.2.0](https://github.com/hubra-app/hubra-plugin-bank-import/releases/tag/v1.2.0) |
-| Budgets | [hubra-plugin-budgets](https://github.com/hubra-app/hubra-plugin-budgets) | [1.1.0](https://github.com/hubra-app/hubra-plugin-budgets/releases/tag/v1.1.0) |
-| Codes | [hubra-plugin-codes](https://github.com/hubra-app/hubra-plugin-codes) | [2.0.0](https://github.com/hubra-app/hubra-plugin-codes/releases/tag/v2.0.0) |
-| Discord | [hubra-plugin-discord](https://github.com/hubra-app/hubra-plugin-discord) | [2.5.0](https://github.com/hubra-app/hubra-plugin-discord/releases/tag/v2.5.0) |
-| Guides | [hubra-plugin-guides](https://github.com/hubra-app/hubra-plugin-guides) | [1.1.0](https://github.com/hubra-app/hubra-plugin-guides/releases/tag/v1.1.0) |
+| Board | [hubra-plugin-board](https://github.com/hubra-app/hubra-plugin-board) | [1.0.0](https://github.com/hubra-app/hubra-plugin-board/releases/tag/v1.0.0) |
+| Booking | [hubra-plugin-booking](https://github.com/hubra-app/hubra-plugin-booking) | [1.0.0](https://github.com/hubra-app/hubra-plugin-booking/releases/tag/v1.0.0) |
+| Budgets | [hubra-plugin-budgets](https://github.com/hubra-app/hubra-plugin-budgets) | [1.3.0](https://github.com/hubra-app/hubra-plugin-budgets/releases/tag/v1.3.0) |
+| Codes | [hubra-plugin-codes](https://github.com/hubra-app/hubra-plugin-codes) | [2.0.1](https://github.com/hubra-app/hubra-plugin-codes/releases/tag/v2.0.1) |
+| Community | [hubra-plugin-community](https://github.com/hubra-app/hubra-plugin-community) | [1.0.0](https://github.com/hubra-app/hubra-plugin-community/releases/tag/v1.0.0) |
+| Discord | [hubra-plugin-discord](https://github.com/hubra-app/hubra-plugin-discord) | [2.7.1](https://github.com/hubra-app/hubra-plugin-discord/releases/tag/v2.7.1) |
+| Documents | [hubra-plugin-documents](https://github.com/hubra-app/hubra-plugin-documents) | [1.0.0](https://github.com/hubra-app/hubra-plugin-documents/releases/tag/v1.0.0) |
+| Forms | [hubra-plugin-forms](https://github.com/hubra-app/hubra-plugin-forms) | [1.0.0](https://github.com/hubra-app/hubra-plugin-forms/releases/tag/v1.0.0) |
+| Guides | [hubra-plugin-guides](https://github.com/hubra-app/hubra-plugin-guides) | [1.3.1](https://github.com/hubra-app/hubra-plugin-guides/releases/tag/v1.3.1) |
 | Inventory | [hubra-plugin-inventory](https://github.com/hubra-app/hubra-plugin-inventory) | [2.1.0](https://github.com/hubra-app/hubra-plugin-inventory/releases/tag/v2.1.0) |
-| Keys | [hubra-plugin-keys](https://github.com/hubra-app/hubra-plugin-keys) | [1.1.0](https://github.com/hubra-app/hubra-plugin-keys/releases/tag/v1.1.0) |
+| Kasse | [hubra-plugin-kasse](https://github.com/hubra-app/hubra-plugin-kasse) | [1.0.0](https://github.com/hubra-app/hubra-plugin-kasse/releases/tag/v1.0.0) |
+| Keys | [hubra-plugin-keys](https://github.com/hubra-app/hubra-plugin-keys) | [1.2.1](https://github.com/hubra-app/hubra-plugin-keys/releases/tag/v1.2.1) |
+| Letters | [hubra-plugin-letters](https://github.com/hubra-app/hubra-plugin-letters) | [1.0.0](https://github.com/hubra-app/hubra-plugin-letters/releases/tag/v1.0.0) |
+| Messengers | [hubra-plugin-messengers](https://github.com/hubra-app/hubra-plugin-messengers) | [1.0.0](https://github.com/hubra-app/hubra-plugin-messengers/releases/tag/v1.0.0) |
+| Online payments | [hubra-plugin-payments](https://github.com/hubra-app/hubra-plugin-payments) | [1.0.0](https://github.com/hubra-app/hubra-plugin-payments/releases/tag/v1.0.0) |
 | Shared inbox (IMAP) | [hubra-plugin-imap-inbox](https://github.com/hubra-app/hubra-plugin-imap-inbox) | [1.1.0](https://github.com/hubra-app/hubra-plugin-imap-inbox/releases/tag/v1.1.0) |
+| Supporters | [hubra-plugin-supporters](https://github.com/hubra-app/hubra-plugin-supporters) | [1.0.0](https://github.com/hubra-app/hubra-plugin-supporters/releases/tag/v1.0.0) |
+| Teams | [hubra-plugin-teams](https://github.com/hubra-app/hubra-plugin-teams) | [1.0.0](https://github.com/hubra-app/hubra-plugin-teams/releases/tag/v1.0.0) |
 
 The version is each plugin's latest GitHub release. After every plugin
 release, or when a new plugin is added, update this table and the other
@@ -54,6 +66,9 @@ and `public/assets/site.css`, `theme.js` and the fonts are copied from
 
 ## A new plugin
 
-From the Hubra repository: `python3 tools/plugin_repo/make_plugin_repo.py
-plugins/<id> ../hubra-plugin-<id>`, push it to `hubra-app/hubra-plugin-<id>`
-(public), and publish its first release.
+Start from [hubra-plugins-template](https://github.com/hubra-app/hubra-plugins-template)
+(**Use this template**, named `hubra-plugin-<id>` in hubra-app, public) and
+follow its README. To turn an existing plugin folder into such a repository,
+Hubra has `python3 tools/plugin_repo/make_plugin_repo.py <folder>
+../hubra-plugin-<id>`. The repository is listed here after its first
+release.
