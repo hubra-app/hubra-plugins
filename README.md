@@ -1,6 +1,6 @@
 # Hubra plugins
 
-[![Publish the Marketplace](https://github.com/hubra-app/hubra-plugins/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/hubra-app/hubra-plugins/actions/workflows/publish.yml?query=branch%3Amain)
+[![Publish the Marketplace](https://github.com/hubra-app/hubra-plugins/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/hubra-app/hubra-plugins/actions/workflows/publish.yml?query=branch%3Amain) [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-bitsandbricks-ffdd00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/bitsandbricks)
 
 The official Marketplace of [Hubra](https://hubra.club): a signed `index.json`
 at **https://plugins.hubra.club/index.json**, which every Hubra trusts out of
